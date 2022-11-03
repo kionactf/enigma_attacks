@@ -71,6 +71,18 @@ Note: On testing, I noticed some encryption/decryption results are different on 
   An Enigma simulator for various models
 
 ## Reference
+including just memo (necessarily not checked in detail), but helpful all.
+
+* enigma simulators (many models are implemented)
+  * http://people.physik.hu-berlin.de/~palloks/js/enigma/index_en.html
+  * https://cryptii.com/pipes/enigma-machine
+  * https://dencode.com/en/cipher/enigma
+  * https://enigma.w6k.ca/enigma.html
+
+* enigma implementation (many models are implemented)
+  * https://github.com/the-lambda-way/bruteforce-enigma
+  * https://github.com/aurbano/enigma_py
+
 * https://www.cryptomuseum.com/crypto/enigma/
 
 * https://de.wikipedia.org/wiki/Enigma-Walzen
