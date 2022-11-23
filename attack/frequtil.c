@@ -17,7 +17,13 @@ double* bigramlogtable;
 double* trigramlogtable;
 double* quadgramlogtable;
 
-int readFileKeyValueToArray(char* filename, unsigned int (*keytoidx)(char*), unsigned int* valtotal, double** ary, unsigned int arynum) {
+int readFileKeyValueToArray(
+    const char* filename,
+    unsigned int (*keytoidx)(const char*),
+    unsigned int* valtotal,
+    double** ary,
+    unsigned int arynum
+) {
     FILE* fp;
     char line[1024];
     char key[1025];
@@ -65,7 +71,7 @@ int readFileKeyValueToArray(char* filename, unsigned int (*keytoidx)(char*), uns
         val = atof(valptr);
         if (val < 0) return -1;
         (*ary)[table_idx] = val;
-        
+
         *valtotal += val;
     }
 
@@ -74,7 +80,12 @@ int readFileKeyValueToArray(char* filename, unsigned int (*keytoidx)(char*), uns
     return 0;
 }
 
-int createfreqlogtable(double** plainfreqtable, double** logtable, unsigned int freqsum, unsigned int tablenum) {
+int createfreqlogtable(
+    double** plainfreqtable,
+    double** logtable,
+    unsigned int freqsum,
+    unsigned int tablenum
+) {
     unsigned int i;
 
     *logtable = (double*)malloc(tablenum * sizeof(double));
@@ -132,83 +143,112 @@ int finalizeFreq() {
 
 /** English **/
 
-unsigned int keytomonogramidx(char* key) {
+unsigned int keytomonogramidx(const char* key) {
     return (unsigned int)(key[0] - 'A');
 }
 
 int initializeEnglishMonogram() {
     unsigned int freqsum;
 
-    char filename[1024] = "freqdb/english_monograms.txt\0";
+    const char filename[1024] = "freqdb/english_monograms.txt\0";
 
-    if (readFileKeyValueToArray(filename, keytomonogramidx, &freqsum, &monogramtable, 26) != 0)
+    if (readFileKeyValueToArray(
+        filename, keytomonogramidx, &freqsum, &monogramtable, 26) != 0
+    ) {
         return -1;
+    }
     if (createfreqlogtable(&monogramtable, &monogramlogtable, freqsum, 26) != 0)
         return -1;
 
     return 0;
 }
 
-unsigned int keytobigramidx(char* key) {
+unsigned int keytobigramidx(const char* key) {
     return (unsigned int)((key[0] - 'A') * 26 + (key[1] - 'A'));
 }
 
 int initializeEnglishBigram() {
     unsigned int freqsum;
 
-    char filename[1024] = "freqdb/english_bigrams.txt\0";
+    const char filename[1024] = "freqdb/english_bigrams.txt\0";
 
-    if (readFileKeyValueToArray(filename, keytobigramidx, &freqsum, &bigramtable, 26 * 26) != 0)
+    if (readFileKeyValueToArray(
+        filename, keytobigramidx, &freqsum, &bigramtable, 26 * 26) != 0
+    ) {
         return -1;
-    if (createfreqlogtable(&bigramtable, &bigramlogtable, freqsum, 26 * 26) != 0)
+    }
+    if (createfreqlogtable(
+        &bigramtable, &bigramlogtable, freqsum, 26 * 26) != 0
+    ) {
         return -1;
+    }
 
     return 0;
 }
 
-unsigned int keytotrigramidx(char* key) {
-    return (unsigned int)((key[0] - 'A') * (26 * 26) + (key[1] - 'A') * 26 + (key[2] - 'A'));
+unsigned int keytotrigramidx(const char* key) {
+    return (unsigned int)(
+                (key[0] - 'A') * (26 * 26) +
+                (key[1] - 'A') * 26 +
+                (key[2] - 'A'));
 }
 
 int initializeEnglishTrigram() {
     unsigned int freqsum;
 
-    char filename[1024] = "freqdb/english_trigrams.txt\0";
+    const char filename[1024] = "freqdb/english_trigrams.txt\0";
 
-    if (readFileKeyValueToArray(filename, keytotrigramidx, &freqsum, &trigramtable, 26 * 26 * 26) != 0)
+    if (readFileKeyValueToArray(
+        filename, keytotrigramidx, &freqsum, &trigramtable, 26 * 26 * 26) != 0
+    ) {
         return -1;
-    if (createfreqlogtable(&trigramtable, &trigramlogtable, freqsum, 26 * 26 * 26) != 0)
+    }
+    if (createfreqlogtable(
+        &trigramtable, &trigramlogtable, freqsum, 26 * 26 * 26) != 0
+    ) {
         return -1;
+    }
 
     return 0;
 }
 
-unsigned int keytoquadgramidx(char* key) {
-    return (unsigned int)((key[0] - 'A') * (26 * 26 * 26) + (key[1] - 'A') * (26 * 26) + (key[2] - 'A') * 26 + (key[3] - 'A'));
+unsigned int keytoquadgramidx(const char* key) {
+    return (unsigned int)(
+                (key[0] - 'A') * (26 * 26 * 26) +
+                (key[1] - 'A') * (26 * 26) +
+                (key[2] - 'A') * 26 +
+                (key[3] - 'A'));
 }
 
 int initializeEnglishQuadgram() {
     unsigned int freqsum;
 
-    char filename[1024] = "freqdb/english_quadgrams.txt\0";
+    const char filename[1024] = "freqdb/english_quadgrams.txt\0";
 
-    if (readFileKeyValueToArray(filename, keytoquadgramidx, &freqsum, &quadgramtable, 26 * 26 * 26 * 26) != 0)
+    if (readFileKeyValueToArray(
+        filename, keytoquadgramidx, &freqsum, &quadgramtable,
+        26 * 26 * 26 * 26) != 0
+    ) {
         return -1;
-    if (createfreqlogtable(&quadgramtable, &quadgramlogtable, freqsum, 26 * 26 * 26 * 26) != 0)
+    }
+    if (createfreqlogtable(
+        &quadgramtable, &quadgramlogtable, freqsum, 26 * 26 * 26 * 26) != 0
+    ) {
         return -1;
+    }
 
     return 0;
 }
 
 int initializeEnglishFreq() {
     if (
-        (initializeEnglishMonogram() != 0) || 
-        (initializeEnglishBigram() != 0) || 
-        (initializeEnglishTrigram() != 0) || 
+        (initializeEnglishMonogram() != 0) ||
+        (initializeEnglishBigram() != 0) ||
+        (initializeEnglishTrigram() != 0) ||
         (initializeEnglishQuadgram() != 0)
     )
         return -1;
-    
+
     return 0;
 }
 
@@ -224,12 +264,18 @@ int finalizeEnglishFreq() {
 int initializeGermanSpecialBigram() {
     unsigned int freqsum;
 
-    char filename[1024] = "freqdb/german_special_bigrams.txt\0";
+    const char filename[1024] = "freqdb/german_special_bigrams.txt\0";
 
-    if (readFileKeyValueToArray(filename, keytobigramidx, &freqsum, &bigramtable, 26 * 26) != 0)
+    if (readFileKeyValueToArray(
+        filename, keytobigramidx, &freqsum, &bigramtable, 26 * 26) != 0
+    ) {
         return -1;
-    if (createfreqlogtable(&bigramtable, &bigramlogtable, freqsum, 26 * 26) != 0)
+    }
+    if (createfreqlogtable(
+        &bigramtable, &bigramlogtable, freqsum, 26 * 26) != 0
+    ) {
         return -1;
+    }
 
     return 0;
 }
@@ -237,12 +283,18 @@ int initializeGermanSpecialBigram() {
 int initializeGermanSpecialTrigram() {
     unsigned int freqsum;
 
-    char filename[1024] = "freqdb/german_special_trigrams.txt\0";
+    const char filename[1024] = "freqdb/german_special_trigrams.txt\0";
 
-    if (readFileKeyValueToArray(filename, keytotrigramidx, &freqsum, &trigramtable, 26 * 26 * 26) != 0)
+    if (readFileKeyValueToArray(
+        filename, keytotrigramidx, &freqsum, &trigramtable, 26 * 26 * 26) != 0
+    ) {
         return -1;
-    if (createfreqlogtable(&trigramtable, &trigramlogtable, freqsum, 26 * 26 * 26) != 0)
+    }
+    if (createfreqlogtable(
+        &trigramtable, &trigramlogtable, freqsum, 26 * 26 * 26) != 0
+    ) {
         return -1;
+    }
 
     return 0;
 }
@@ -272,7 +324,8 @@ int initializeGermanSpecialMonogram_from_Bigramtable() {
 }
 
 int initializeGermanSpecialFreq() {
-    if ((initializeGermanSpecialBigram() != 0) || (initializeGermanSpecialTrigram() != 0))
+    if ((initializeGermanSpecialBigram() != 0) ||
+        (initializeGermanSpecialTrigram() != 0))
         return -1;
     if (initializeGermanSpecialMonogram_from_Bigramtable() != 0)
         return -1;
@@ -289,7 +342,8 @@ int finalizeGermanSpecialFreq() {
 /** general score computation **/
 
 double IOCScore(char* text) {
-    // calculate Index of Coincidence (neglecting multipling c(the number of letter=26))
+    // calculate Index of Coincidence
+    // (neglecting multipling c(the number of letter=26))
 
     unsigned int i;
     unsigned int counttable[26];
@@ -329,7 +383,10 @@ double bigramIOCScore(char* text) {
 
     // construct count table
     for (i=0; i < n-1; i++) {
-        if (((text[i] >= 'A') && (text[i] <= 'Z')) && ((text[i+1] >= 'A') && (text[i+1] <= 'Z'))) {
+        if (
+            ((text[i] >= 'A') && (text[i] <= 'Z')) &&
+            ((text[i+1] >= 'A') && (text[i+1] <= 'Z'))
+        ) {
             idx = (text[i] - 'A') * 26 + (text[i+1] - 'A');
             counttable[idx] += 1;
         }
@@ -355,7 +412,10 @@ double bigramScore(char* text) {
     n = strlen(text);
 
     for (i=0; i < n - 1; i++) {
-        if (((text[i] >= 'A') && (text[i] <= 'Z')) && ((text[i+1] >= 'A') && (text[i+1] <= 'Z'))) {
+        if (
+            ((text[i] >= 'A') && (text[i] <= 'Z')) &&
+            ((text[i+1] >= 'A') && (text[i+1] <= 'Z'))
+        ) {
             table_idx = (text[i] - 'A') * 26 + (text[i+1] - 'A');
             score += bigramlogtable[table_idx];
         }
@@ -375,8 +435,14 @@ double trigramScore(char* text) {
     n = strlen(text);
 
     for (i=0; i < n - 2; i++) {
-        if (((text[i] >= 'A') && (text[i] <= 'Z')) && ((text[i+1] >= 'A') && (text[i+1] <= 'Z')) && ((text[i+2] >= 'A') && (text[i+2] <= 'Z'))) {
-            table_idx = (text[i] - 'A') * (26 * 26) + (text[i+1] - 'A') * 26 + (text[i+2] - 'A');
+        if (
+            ((text[i] >= 'A') && (text[i] <= 'Z')) &&
+            ((text[i+1] >= 'A') && (text[i+1] <= 'Z')) &&
+            ((text[i+2] >= 'A') && (text[i+2] <= 'Z'))
+        ) {
+            table_idx = (text[i] - 'A') * (26 * 26) +
+                        (text[i+1] - 'A') * 26 +
+                        (text[i+2] - 'A');
             score += trigramlogtable[table_idx];
         }
     }
@@ -395,8 +461,16 @@ double quadgramScore(char* text) {
     n = strlen(text);
 
     for (i=0; i < n - 3; i++) {
-        if (((text[i] >= 'A') && (text[i] <= 'Z')) && ((text[i+1] >= 'A') && (text[i+1] <= 'Z')) && ((text[i+2] >= 'A') && (text[i+2] <= 'Z')) && ((text[i+3] >= 'A') & (text[i+3] <= 'Z'))) {
-            table_idx = (text[i] - 'A') * (26 * 26 * 26) + (text[i+1] - 'A') * (26 * 26) + (text[i+2] - 'A') * 26 + (text[i+3] - 'A');
+        if (
+            ((text[i] >= 'A') && (text[i] <= 'Z')) &&
+            ((text[i+1] >= 'A') && (text[i+1] <= 'Z')) &&
+            ((text[i+2] >= 'A') && (text[i+2] <= 'Z')) &&
+            ((text[i+3] >= 'A') & (text[i+3] <= 'Z'))
+        ) {
+            table_idx = (text[i] - 'A') * (26 * 26 * 26) +
+                        (text[i+1] - 'A') * (26 * 26) +
+                        (text[i+2] - 'A') * 26 +
+                        (text[i+3] - 'A');
             score += quadgramlogtable[table_idx];
         }
     }
@@ -442,7 +516,10 @@ double sinkovbigramScore(char* text) {
     n = strlen(text);
 
     for (i=0; i < n-1; i++) {
-        if (((text[i] >= 'A') && (text[i] <= 'Z')) && ((text[i+1] >= 'A') && (text[i+1] <= 'Z'))) {
+        if (
+            ((text[i] >= 'A') && (text[i] <= 'Z')) &&
+            ((text[i+1] >= 'A') && (text[i+1] <= 'Z'))
+        ) {
             idx = (text[i] - 'A') * 26 + (text[i+1] - 'A');
             counttable[idx] += 1;
         }
@@ -469,7 +546,10 @@ int cmpscore(const void* a, const void* b) {
     return (int)(((((RankDict*)b)->score) - (((RankDict*)a)->score)) > 0);
 }
 
-int rankBasedScoreTable(unsigned int* rank, unsigned int maxrank, double* table, unsigned int tablenum) {
+int rankBasedScoreTable(
+    unsigned int* rank, unsigned int maxrank,
+    const double* table, unsigned int tablenum
+) {
     unsigned int i;
     RankDict* rankdictary;
 

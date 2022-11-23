@@ -10,7 +10,7 @@ int hillclimbtest1() {
     char plaintext[465] = "ALICEWASBEGINNINGTOGETVERYTIREDOFSITTINGBYHERSISTERONTHEBANKANDOFHAVINGNOTHINGTODOONCEORTWICESHEHADPEEPEDINTOTHEBOOKHERSISTERWASREADINGBUTITHADNOPICTURESORCONVERSATIONSINITANDWHATISTHEUSEOFABOOKTHOUGHTALICEWITHOUTPICTURESORCONVERSATIONSSOSHEWASCONSIDERINGINHEROWNMINDASWELLASSHECOULDFORTHEHOTDAYMADEHERFEELVERYSLEEPYANDSTUPIDWHETHERTHEPLEASUREOFMAKINGADAISYCHAINWOULDBEWORTHTHETROUBLEOFGETTINGUPANDPICKINGTHEDAISIESWHENSUDDENLYAWHITERABBITWITHPINKEYESRANCLOSEBYHER\0";
     char ciphertext[465];
 
-    int reflector = 0; // B
+    int reflector = 0;  // B
     int wheel_order[3] = {1-1, 2-1, 3-1};
     char ring_setting[3] = {'X', 'Y', 'Z'};
     char wheel_pos[3] = {'A', 'B', 'C'};
@@ -38,7 +38,7 @@ int hillclimbtest1() {
     printEnigmaParam(&outputparam);
     printf("\n");
 #endif
-    
+
     for (i=0; i < 26; i++) {
         if (outputparam.plugboard.wheel[i] != encparam.plugboard.wheel[i])
             return -2;
@@ -50,12 +50,12 @@ int hillclimbtest1() {
     return 0;
 }
 
-int hillclimbtest_nearestrank_1 () {
+int hillclimbtest_nearestrank_1() {
     EnigmaParam encparam, origparam, outputparam;
     char plaintext[160] = "SOSHEWASCONSIDERINGINHEROWNMINDASWELLASSHECOULDFORTHEHOTDAYMADEHERFEELVERYSLEEPYANDSTUPIDWHETHERTHEPLEASUREOFMAKINGADAISYCHAINWOULDBEWORTHTHETROUBLEOFGETTINGUP\0";
     char ciphertext[160];
 
-    int reflector = 0; // B
+    int reflector = 0;  // B
     int wheel_order[3] = {1-1, 2-1, 3-1};
     char ring_setting[3] = {'X', 'Y', 'Z'};
     char wheel_pos[3] = {'A', 'B', 'C'};
@@ -118,12 +118,12 @@ int hillclimbtest_nearestrank_1 () {
     return 0;
 }
 
-int hillclimbtest_nearestrank_sinkov_1 () {
+int hillclimbtest_nearestrank_sinkov_1() {
     EnigmaParam encparam, origparam, outputparam;
     char plaintext[160] = "SOSHEWASCONSIDERINGINHEROWNMINDASWELLASSHECOULDFORTHEHOTDAYMADEHERFEELVERYSLEEPYANDSTUPIDWHETHERTHEPLEASUREOFMAKINGADAISYCHAINWOULDBEWORTHTHETROUBLEOFGETTINGUP\0";
     char ciphertext[160];
 
-    int reflector = 0; // B
+    int reflector = 0;  // B
     int wheel_order[3] = {1-1, 2-1, 3-1};
     char ring_setting[3] = {'X', 'Y', 'Z'};
     char wheel_pos[3] = {'A', 'B', 'C'};
@@ -161,12 +161,12 @@ int hillclimbtest_nearestrank_sinkov_1 () {
     return 0;
 }
 
-int hillclimbtest_sinkov_fewbruteforce_1 () {
+int hillclimbtest_sinkov_fewbruteforce_1() {
     EnigmaParam encparam, origparam, outputparam;
     char plaintext[136] = "ALICEWASBEGINNINGTOGETVERYTIREDOFSITTINGBYHERSISTERONTHEBANKANDOFHAVINGNOTHINGTODOONCEORTWICESHEHADPEEPEDINTOTHEBOOKHERSISTERWASREADING\0";
     char ciphertext[136];
 
-    int reflector = 0; // B
+    int reflector = 0;  // B
     int wheel_order[3] = {1-1, 2-1, 3-1};
     char ring_setting[3] = {'X', 'Y', 'Z'};
     char wheel_pos[3] = {'A', 'B', 'C'};
@@ -206,7 +206,7 @@ int hillclimbtest_sinkov_fewbruteforce_1 () {
 
 int hillclimbtest2() {
     // https://www.bytereef.org/m4-project-first-break.html
-    int reflector = 0; // B_Thin
+    int reflector = 0;  // B_Thin
     int wheel_order[4] = {0, 2-1, 4-1, 1-1};
     char ring_setting[4] = {'A', 'A', 'A', 'V'};
     char wheel_pos[4] = {'V', 'J', 'N', 'A'};
@@ -215,7 +215,7 @@ int hillclimbtest2() {
     EnigmaParam encparam, origparam, outputparam;
     char ciphertext[233] = "NCZWVUSXPNYMINHZXMQXSFWXWLKJAHSHNMCOCCAKUQPMKCSMHKSEINJUSBLKIOSXCKUBHMLLXCSJUSRRDVKOHULXWCCBGVLIYXEOAHXRHKKFVDREWEZLXOBAFGYUJQUKGRTVUKAMEURBVEKSUHHVOYHABCJWMAKLFKLMYFVNRIZRVVRTKOFDANJMOLBGFFLEOPRGTFLVRHOWOPBEKVWMUQFMPWPARMFHAGKXIIBG\0";
     char plaintext[233];
-    char plaintext_expected[233] = "VONVONJLOOKSJHFFTTTEINSEINSDREIZWOYYQNNSNEUNINHALTXXBEIANGRIFFUNTERWASSERGEDRUECKTYWABOSXLETZTERGEGNERSTANDNULACHTDREINULUHRMARQUANTONJOTANEUNACHTSEYHSDREIYZWOZWONULGRADYACHTSMYSTOSSENACHXEKNSVIERMBFAELLTYNNNNNNOOOVIERYSICHTEINSNULL\0";
+    const char plaintext_expected[233] = "VONVONJLOOKSJHFFTTTEINSEINSDREIZWOYYQNNSNEUNINHALTXXBEIANGRIFFUNTERWASSERGEDRUECKTYWABOSXLETZTERGEGNERSTANDNULACHTDREINULUHRMARQUANTONJOTANEUNACHTSEYHSDREIYZWOZWONULGRADYACHTSMYSTOSSENACHXEKNSVIERMBFAELLTYNNNNNNOOOVIERYSICHTEINSNULL\0";
 
     unsigned int i;
 
@@ -238,7 +238,7 @@ int hillclimbtest2() {
     printEnigmaParam(&outputparam);
     printf("\n");
 #endif
-    
+
     for (i=0; i < 26; i++) {
         if (outputparam.plugboard.wheel[i] != encparam.plugboard.wheel[i])
             return -2;
@@ -256,7 +256,7 @@ int hillclimbtest2() {
     return 0;
 }
 
-int bombetest1 () {
+int bombetest1() {
     EnigmaParam encparam, origparam, outputparam;
     char plaintext[97] = "XXXXXABCDEFGHIJKLMNOPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\0";
     char ciphertext[97];
@@ -265,7 +265,7 @@ int bombetest1 () {
     char crib[16+1] = "ABCDEFGHIJKLMNOP\0";
     unsigned int crib_idx_at_ciphertext = 5;
 
-    int reflector = 0; // B
+    int reflector = 0;  // B
     int wheel_order[3] = {1-1, 2-1, 3-1};
     char ring_setting[3] = {'X', 'Y', 'Z'};
     char wheel_pos[3] = {'A', 'B', 'C'};

@@ -17,7 +17,10 @@ int initplugboard(EnigmaParam* param) {
     return 0;
 }
 
-int attachPlugboardTwoIndex(EnigmaParam* curparam, unsigned int i, unsigned int j) {
+int attachPlugboardTwoIndex(
+    EnigmaParam* curparam,
+    unsigned int i, unsigned int j
+) {
     // Note: inplace change curparam for plugboard
 
     unsigned int paired_i, paired_j;
@@ -41,7 +44,7 @@ int attachPlugboardTwoIndex(EnigmaParam* curparam, unsigned int i, unsigned int 
 
 int unplugPlugboardOneIndex(EnigmaParam* curparam, unsigned int i) {
     // Note: inplace change curparam for plugboard
-    
+
     unsigned int paired_i;
 
     paired_i = curparam->plugboard.wheel[i] - 'A';
@@ -51,8 +54,13 @@ int unplugPlugboardOneIndex(EnigmaParam* curparam, unsigned int i) {
     return 0;
 }
 
-int hillclimbEachScore(EnigmaParam* outputparam, EnigmaParam* origparam, char ciphertext[], double score(char*)) {
-    unsigned int i,j;
+int hillclimbEachScore(
+    EnigmaParam* outputparam,
+    EnigmaParam* origparam,
+    char ciphertext[],
+    double score(char*)
+) {
+    unsigned int i, j;
     EnigmaParam bestparam, curparam, prevparam;
     double bestscore, curscore, prevscore;
     char* plaintext;
@@ -82,7 +90,7 @@ int hillclimbEachScore(EnigmaParam* outputparam, EnigmaParam* origparam, char ci
                 attachPlugboardTwoIndex(&curparam, i, j);
                 enigmaDecrypt(&curparam, (char*)ciphertext, plaintext);
                 curscore = score(plaintext);
-    
+
                 if (curscore > bestscore) {
                     copyEnigmaParam(&bestparam, &curparam);
                     bestscore = curscore;
@@ -114,7 +122,13 @@ int hillclimbEachScore(EnigmaParam* outputparam, EnigmaParam* origparam, char ci
     return 0;
 }
 
-int hillclimbAttackEnigmaPlugboard(EnigmaParam* outputparam, EnigmaParam* origparam, char ciphertext[], Freqfuncs* freqfuncs, unsigned int maxround) {
+int hillclimbAttackEnigmaPlugboard(
+    EnigmaParam* outputparam,
+    EnigmaParam* origparam,
+    char ciphertext[],
+    Freqfuncs* freqfuncs,
+    unsigned int maxround
+) {
     /***
      * hill climbing attack based on https://cryptocellar.org/bgac/HillClimbEnigma.pdf
      * assume that origparam is correct except plugboard. (this function changes plugboard only.)
@@ -146,44 +160,56 @@ int hillclimbAttackEnigmaPlugboard(EnigmaParam* outputparam, EnigmaParam* origpa
 
     for (rnd=0; rnd < maxround; rnd++) {
         prevscore = bestscore;
-    
+
 #ifdef HILLCLIMBDEBUG
-        printf("[round]%d\t(prevscore=%lf)\n", rnd, prevscore);
+        printf("[round]%u\t(prevscore=%lf)\n", rnd, prevscore);
 #endif
 
         // hillclimb based on IOCScore
         copyEnigmaParam(&curparam, &bestparam);
-        if (hillclimbEachScore(&bestparam, &curparam, ciphertext, freqfuncs->IOCScore) != 0)
+        if (hillclimbEachScore(
+            &bestparam, &curparam, ciphertext,
+            freqfuncs->IOCScore) != 0
+        ) {
             return -1;
-    
+        }
+
 #ifdef HILLCLIMBDEBUG
         printf("===== after IOCScore ======\n");
         printEnigmaParam(&bestparam);
         printf("\n");
 #endif
-    
+
         // hillclimb based on bigramIOCScore
         copyEnigmaParam(&curparam, &bestparam);
-        if (hillclimbEachScore(&bestparam, &curparam, ciphertext, freqfuncs->bigramIOCScore) != 0)
+        if (hillclimbEachScore(
+            &bestparam, &curparam, ciphertext,
+            freqfuncs->bigramIOCScore) != 0
+        ) {
             return -1;
-    
+        }
+
 #ifdef HILLCLIMBDEBUG
         printf("===== after bigramIOCScore ======\n");
         printEnigmaParam(&bestparam);
         printf("\n");
 #endif
-    
+
         // hillclimb based on bigramScore
         copyEnigmaParam(&curparam, &bestparam);
-        if (hillclimbEachScore(&bestparam, &curparam, ciphertext, freqfuncs->bigramScore) != 0)
+        if (hillclimbEachScore(
+            &bestparam, &curparam, ciphertext,
+            freqfuncs->bigramScore) != 0
+        ) {
             return -1;
-    
+        }
+
 #ifdef HILLCLIMBDEBUG
         printf("===== after bigramScore ======\n");
         printEnigmaParam(&bestparam);
         printf("\n");
 #endif
-   
+
         // check whether score is improved or not
         enigmaDecrypt(&bestparam, (char*)ciphertext, plaintext);
         bestscore = freqfuncs->trigramScore(plaintext);
@@ -193,8 +219,12 @@ int hillclimbAttackEnigmaPlugboard(EnigmaParam* outputparam, EnigmaParam* origpa
 
     // finally, hillclimb based on trigramScore
     copyEnigmaParam(&curparam, &bestparam);
-    if (hillclimbEachScore(&bestparam, &curparam, ciphertext, freqfuncs->trigramScore) != 0)
+    if (hillclimbEachScore(
+        &bestparam, &curparam, ciphertext,
+        freqfuncs->trigramScore) != 0
+    ) {
         return -1;
+    }
 
 #ifdef HILLCLIMBDEBUG
     printf("===== after trigramScore =====\n");
@@ -212,7 +242,13 @@ int hillclimbAttackEnigmaPlugboard(EnigmaParam* outputparam, EnigmaParam* origpa
     return 0;
 }
 
-int hillclimbAttackEnigmaPlugboardSinkov(EnigmaParam* outputparam, EnigmaParam* origparam, char ciphertext[], Freqfuncs* freqfuncs, unsigned int maxround) {
+int hillclimbAttackEnigmaPlugboardSinkov(
+    EnigmaParam* outputparam,
+    EnigmaParam* origparam,
+    char ciphertext[],
+    Freqfuncs* freqfuncs,
+    unsigned int maxround
+) {
     /***
      * hill climbing attack with using Sinkov score
      * 
@@ -237,44 +273,56 @@ int hillclimbAttackEnigmaPlugboardSinkov(EnigmaParam* outputparam, EnigmaParam* 
 
     for (rnd=0; rnd < maxround; rnd++) {
         prevscore = bestscore;
-    
+
 #ifdef HILLCLIMBDEBUG
-        printf("[round]%d\t(prevscore=%lf)\n", rnd, prevscore);
+        printf("[round]%u\t(prevscore=%lf)\n", rnd, prevscore);
 #endif
 
         // hillclimb based on sinkovScore
         copyEnigmaParam(&curparam, &bestparam);
-        if (hillclimbEachScore(&bestparam, &curparam, ciphertext, freqfuncs->sinkovScore) != 0)
+        if (hillclimbEachScore(
+            &bestparam, &curparam, ciphertext,
+            freqfuncs->sinkovScore) != 0
+        ) {
             return -1;
-    
+        }
+
 #ifdef HILLCLIMBDEBUG
         printf("===== after sinkovScore ======\n");
         printEnigmaParam(&bestparam);
         printf("\n");
 #endif
-   
+
         // hillclimb based on sinkovbigramScore
         copyEnigmaParam(&curparam, &bestparam);
-        if (hillclimbEachScore(&bestparam, &curparam, ciphertext, freqfuncs->sinkovbigramScore) != 0)
+        if (hillclimbEachScore(
+            &bestparam, &curparam, ciphertext,
+            freqfuncs->sinkovbigramScore) != 0
+        ) {
             return -1;
-    
+        }
+
 #ifdef HILLCLIMBDEBUG
         printf("===== after sinkovbigramScore ======\n");
         printEnigmaParam(&bestparam);
         printf("\n");
 #endif
-    
+
         // hillclimb based on bigramScore
         copyEnigmaParam(&curparam, &bestparam);
-        if (hillclimbEachScore(&bestparam, &curparam, ciphertext, freqfuncs->bigramScore) != 0)
+        if (hillclimbEachScore(
+            &bestparam, &curparam, ciphertext,
+            freqfuncs->bigramScore) != 0
+        ) {
             return -1;
-    
+        }
+
 #ifdef HILLCLIMBDEBUG
         printf("===== after bigramScore ======\n");
         printEnigmaParam(&bestparam);
         printf("\n");
 #endif
-    
+
         // check whether score imprved or not
         enigmaDecrypt(&bestparam, (char*)ciphertext, plaintext);
         bestscore = freqfuncs->trigramScore(plaintext);
@@ -284,8 +332,12 @@ int hillclimbAttackEnigmaPlugboardSinkov(EnigmaParam* outputparam, EnigmaParam* 
 
     // finally, hillclimb based on trigramScore
     copyEnigmaParam(&curparam, &bestparam);
-    if (hillclimbEachScore(&bestparam, &curparam, ciphertext, freqfuncs->trigramScore) != 0)
+    if (hillclimbEachScore(
+        &bestparam, &curparam, ciphertext,
+        freqfuncs->trigramScore) != 0
+    ) {
         return -1;
+    }
 
 #ifdef HILLCLIMBDEBUG
     printf("===== after trigramScore =====\n");
@@ -303,7 +355,13 @@ int hillclimbAttackEnigmaPlugboardSinkov(EnigmaParam* outputparam, EnigmaParam* 
     return 0;
 }
 
-int hillclimbAttackEnigmaPlugboardSinkovWithFewBruteforce(EnigmaParam* outputparam, EnigmaParam* origparam, char ciphertext[], Freqfuncs* freqfuncs, unsigned int maxround) {
+int hillclimbAttackEnigmaPlugboardSinkovWithFewBruteforce(
+    EnigmaParam* outputparam,
+    EnigmaParam* origparam,
+    char ciphertext[],
+    Freqfuncs* freqfuncs,
+    unsigned int maxround
+) {
     /***
      * hill climbing attack with Sinkov score
      * with bruteforce: ("E-sticker method" (not only "E", use 5-high monogram score characters))
@@ -320,8 +378,11 @@ int hillclimbAttackEnigmaPlugboardSinkovWithFewBruteforce(EnigmaParam* outputpar
     unsigned int monogramrank[5];
     int alreadyplugged;
 
-    if (rankBasedScoreTable((unsigned int*)monogramrank, 5, monogramtable, 26) != 0)
+    if (rankBasedScoreTable(
+        (unsigned int*)monogramrank, 5, monogramtable, 26) != 0
+    ) {
         return -1;
+    }
 
     plaintextlen = strlen(ciphertext);
     plaintext = (char*)malloc(sizeof(char) * (plaintextlen + 1));
@@ -341,20 +402,22 @@ int hillclimbAttackEnigmaPlugboardSinkovWithFewBruteforce(EnigmaParam* outputpar
             alreadyplugged = 0;
             for (j=0; j < rank; j++) {
                 if (
-                        (monogramrank[j] == i) || 
-                        (bestouterparam.plugboard.wheel[monogramrank[j]] == 'A' + (char)i)
+                        (monogramrank[j] == i) ||
+                        (bestouterparam.plugboard.wheel[monogramrank[j]] ==
+                            'A' + (char)i)
                 ) {
                     alreadyplugged = 1;
                 }
             }
-            if (alreadyplugged == 0) 
+            if (alreadyplugged == 0)
                 outerparam.plugboard.wheel[i] = 'A' + i;
         }
 
         // plugged for upper rank index
-        if (outerparam.plugboard.wheel[monogramrank[rank]] != 'A' + (char)monogramrank[rank])
+        if (outerparam.plugboard.wheel[monogramrank[rank]] !=
+            'A' + (char)monogramrank[rank])
             continue;
-        
+
         for (j=0; j < 26; j++) {
             copyEnigmaParam(&bestparam, &outerparam);
             bestparam.plugboard.wheel[monogramrank[rank]] = 'A' + j;
@@ -365,42 +428,54 @@ int hillclimbAttackEnigmaPlugboardSinkovWithFewBruteforce(EnigmaParam* outputpar
             for (rnd=0; rnd < maxround; rnd++) {
                 prevscore = bestscore;
 #ifdef HILLCLIMBDEBUG
-                printf("[round]%d\t(prevscore=%lf)\n", rnd, prevscore);
+                printf("[round]%u\t(prevscore=%lf)\n", rnd, prevscore);
 #endif
-        
+
                 // hillclimb based on sinkovScore
                 copyEnigmaParam(&curparam, &bestparam);
-                if (hillclimbEachScore(&bestparam, &curparam, ciphertext, freqfuncs->sinkovScore) != 0)
+                if (hillclimbEachScore(
+                    &bestparam, &curparam, ciphertext,
+                    freqfuncs->sinkovScore) != 0
+                ) {
                     return -1;
-            
+                }
+
 #ifdef HILLCLIMBDEBUG
                 printf("===== after sinkovScore ======\n");
                 printEnigmaParam(&bestparam);
                 printf("\n");
 #endif
-           
-                // hillclimb based on sinkovbigramScore        
+
+                // hillclimb based on sinkovbigramScore
                 copyEnigmaParam(&curparam, &bestparam);
-                if (hillclimbEachScore(&bestparam, &curparam, ciphertext, freqfuncs->sinkovbigramScore) != 0)
+                if (hillclimbEachScore(
+                    &bestparam, &curparam, ciphertext,
+                    freqfuncs->sinkovbigramScore) != 0
+                ) {
                     return -1;
-            
+                }
+
 #ifdef HILLCLIMBDEBUG
                 printf("===== after sinkovbigramScore ======\n");
                 printEnigmaParam(&bestparam);
                 printf("\n");
 #endif
-            
+
                 // hillclimb based on bigramScore
                 copyEnigmaParam(&curparam, &bestparam);
-                if (hillclimbEachScore(&bestparam, &curparam, ciphertext, freqfuncs->bigramScore) != 0)
+                if (hillclimbEachScore(
+                    &bestparam, &curparam, ciphertext,
+                    freqfuncs->bigramScore) != 0
+                ) {
                     return -1;
-            
+                }
+
 #ifdef HILLCLIMBDEBUG
                 printf("===== after bigramScore ======\n");
                 printEnigmaParam(&bestparam);
                 printf("\n");
 #endif
-            
+
                 // check whether score imprved or not
                 enigmaDecrypt(&bestparam, (char*)ciphertext, plaintext);
                 bestscore = freqfuncs->bigramScore(plaintext);
@@ -445,7 +520,13 @@ int hillclimbAttackEnigmaPlugboardSinkovWithFewBruteforce(EnigmaParam* outputpar
 
 static const double NEGINFSCORE = -2e30;
 
-int insertparam(EnigmaParam rankarray[], double scoretable[], EnigmaParam* curparam, double curscore, unsigned int maxrank) {
+int insertparam(
+    EnigmaParam rankarray[],
+    double scoretable[],
+    EnigmaParam* curparam,
+    double curscore,
+    unsigned int maxrank
+) {
     unsigned int i;
     int j;
 
@@ -468,7 +549,13 @@ int insertparam(EnigmaParam rankarray[], double scoretable[], EnigmaParam* curpa
 }
 
 
-int rankingNeighborGivenParam(EnigmaParam rankarray[], unsigned int maxrank, EnigmaParam* origparam, char ciphertext[], double (*score)(char*)) {
+int rankingNeighborGivenParam(
+    EnigmaParam rankarray[],
+    unsigned int maxrank,
+    EnigmaParam* origparam,
+    char ciphertext[],
+    double (*score)(char*)
+) {
     /***
      * compute score ranking for params of neighbor(one plugboard change) from origparam
      * output: rankarray (array length is maxrank)
@@ -487,8 +574,10 @@ int rankingNeighborGivenParam(EnigmaParam rankarray[], unsigned int maxrank, Eni
         return -1;
 
     scoretable = (double*)malloc(sizeof(double) * maxrank);
-    if (scoretable == NULL)
+    if (scoretable == NULL) {
+        free(plaintext);
         return -1;
+    }
 
     for (i=0; i < maxrank; i++)
         scoretable[i] = NEGINFSCORE;
@@ -500,8 +589,8 @@ int rankingNeighborGivenParam(EnigmaParam rankarray[], unsigned int maxrank, Eni
     for (i=0; i < 26; i++) {
         for (j=i+1; j < 26; j++) {
             if (origparam->plugboard.wheel[i] == 'A' + (char)j)
-                continue; // generate same plugboard
-            
+                continue;  // generate same plugboard
+
             copyEnigmaParam(&curparam, origparam);
             attachPlugboardTwoIndex(&curparam, i, j);
             enigmaDecrypt(&curparam, (char*)ciphertext, plaintext);

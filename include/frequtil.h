@@ -1,5 +1,7 @@
-#ifndef __FREQUTIL_H_
-#define __FREQUTIL_H_
+#ifndef FREQUTIL_H_
+#define FREQUTIL_H_
+
+#include <string.h>
 
 typedef struct freqfuncs__ {
     char language[2+1];
@@ -38,7 +40,9 @@ double quadgramScore(char*);
 double sinkovScore(char*);
 double sinkovbigramScore(char*);
 
-int rankBasedScoreTable(unsigned int*, unsigned int, double*, unsigned int);
+int rankBasedScoreTable(
+    unsigned int*, unsigned int, const double*, unsigned int
+);
 
 static double nullScore(char* str) {
     return 0.0 * strlen(str);
@@ -70,4 +74,4 @@ static const Freqfuncs GermanSpecialFreqfuncs = {
     sinkovbigramScore,
 };
 
-#endif /* __FREQUTIL_H_ */
+#endif  // FREQUTIL_H_

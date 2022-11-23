@@ -1,45 +1,59 @@
-#ifndef __ENIGMA_H_
-#define __ENIGMA_H_
+#ifndef ENIGMA_H_
+#define ENIGMA_H_
 
-typedef struct wheel__{
+typedef struct wheel__ {
     char wheel[26+1];
 } Wheel;
 
-typedef struct wheelpos__{
+typedef struct wheelpos__ {
     char wheelpos;
 } WheelPos;
 
-typedef struct wheelring__{
+typedef struct wheelring__ {
     char wheelring;
 } WheelRing;
 
-//#define MAXTURNOVERNUM (2)
+// #define MAXTURNOVERNUM (2)
 #define MAXTURNOVERNUM (5)
 
-typedef struct turnover__{
+typedef struct turnover__ {
     char turnover[MAXTURNOVERNUM+1];
 } Turnover;
 
 // stable parameters on initial setting
-typedef struct param__{
-    Wheel wheel[6]; // wheel(walzenlage): (entry wheel(ETW,Eintritswalze), rotor(walze), reflector(UKW,umkehrwalze)): entry, rotor-1, rotor-2, rotor-3, reflector (or thin-rotor, thin-reflector)
-    WheelPos wheelpos[4]; // rotor-1, rotor-2, rotor-3, reflector
-    WheelRing wheelring[4]; // rotor-1, rotor-2, rotor-3, reflector
-    Wheel plugboard; // plugboard(steckerbrett)
-    Turnover turnover[3]; // turnover: rotor-1, rotor-2, rotor-3
-    int reflectorsetflag; // settable position and ring for reflector
-    int thinflag; // settable thin reflector and thin rotor
+/***
+ * wheel(walzenlage): 
+ *      (entry wheel(ETW,Eintritswalze), rotor(walze), reflector(UKW,umkehrwalze)):
+ *          entry, rotor-1, rotor-2, rotor-3, reflector (or thin-rotor, thin-reflector)
+ * wheelpos:
+ *      rotor-1, rotor-2, rotor-3, reflector
+ * wheelring:
+ *      rotor-1, rotor-2, rotor-3, reflector
+ * plugboard(stecherbrett)
+ * turnover:
+ *      rotor-1, rotor-2, rotor-3
+***/
+typedef struct param__ {
+    Wheel wheel[6];
+    WheelPos wheelpos[4];
+    WheelRing wheelring[4];
+    Wheel plugboard;
+    Turnover turnover[3];
+    int reflectorsetflag;  // settable position and ring for reflector
+    int thinflag;  // settable thin reflector and thin rotor
 } EnigmaParam;
 
 // variable setting on encrypting/decrypting
 typedef struct cursetting__ {
     int indicator[4];
-    int prevturnoverflag[3];// turnover is for only rotor-1,2,3
+    int prevturnoverflag[3];  // turnover is for only rotor-1,2,3
 } CurSetting;
 
 
-// refer(for naming): https://www.cryptomuseum.com/crypto/enigma/wiring.htm (some wiring seems to be wrong)
-typedef enum rotorenum__{
+// refer(for naming):
+//     https://www.cryptomuseum.com/crypto/enigma/wiring.htm
+//     (some wiring seems to be wrong)
+typedef enum rotorenum__ {
     ROTOR_I, ROTOR_II, ROTOR_III, ROTOR_IV, ROTOR_V, ROTOR_VI, ROTOR_VII, ROTOR_VIII,
     ROTOR_BETA, ROTOR_GAMMA,
     ROTOR_RAILWAY_I, ROTOR_RAILWAY_II, ROTOR_RAILWAY_III,
@@ -83,7 +97,7 @@ static const Wheel RotorSet[] = {
     {"HEJXQOTZBVFDASCILWPGYNMURK"},
 
     {"VEOSIRZUJDQCKGWYPNXAFLTHMB"},
-    {"UEMOATQLSHPKCYFWJZBGVXINDR"}, // some pages says "...DNR", but it seems wrong
+    {"UEMOATQLSHPKCYFWJZBGVXINDR"},  // some pages says "...DNR", but it seems wrong
     {"TZHXMBSIPNURJFDKEQVCWGLAOY"},
 
     {"KPTYUELOCVGRFQDANJMBSWHZXI"},
@@ -127,7 +141,7 @@ static const Wheel ReflectorSet[] = {
 
 static const int UKW_SWISSK = UKW_D_K;
 
-typedef enum etwenum__{
+typedef enum etwenum__ {
     ETW,
     ETW_KEYBOARD,
     ETW_T,
@@ -135,7 +149,7 @@ typedef enum etwenum__{
 
 static const Wheel ETWSet[] = {
     {"ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
-    
+
     {"QWERTZUIOASDFGHJKPYXCVBNML"},
 
     {"KZROUQHYAIGBLWVSTDXFPNMCJE"},
@@ -145,7 +159,7 @@ static const int ETW_D_K = ETW_KEYBOARD;
 static const int ETW_RAILWAY = ETW_KEYBOARD;
 static const int ETW_SWISSK = ETW_KEYBOARD;
 
-typedef enum turnoverenum__{
+typedef enum turnoverenum__ {
     TURNOVER_I, TURNOVER_II, TURNOVER_III, TURNOVER_IV, TURNOVER_V, TURNOVER_VI, TURNOVER_VII, TURNOVER_VIII,
     TURNOVER_D_K_I, TURNOVER_D_K_II, TURNOVER_D_K_III,
     TURNOVER_T_I, TURNOVER_T_II, TURNOVER_T_III, TURNOVER_T_IV, TURNOVER_T_V, TURNOVER_T_VI, TURNOVER_T_VII, TURNOVER_T_VIII,
@@ -161,7 +175,7 @@ static const int TURNOVER_SWISSK_I = TURNOVER_D_K_I;
 static const int TURNOVER_SWISSK_II = TURNOVER_D_K_II;
 static const int TURNOVER_SWISSK_III = TURNOVER_D_K_III;
 
-static const int TURNOVER_RAILWAY_I = TURNOVER_D_K_III; // reversed
+static const int TURNOVER_RAILWAY_I = TURNOVER_D_K_III;  // reversed
 static const int TURNOVER_RAILWAY_II = TURNOVER_D_K_II;
 static const int TURNOVER_RAILWAY_III = TURNOVER_D_K_I;
 
@@ -180,26 +194,34 @@ static const Wheel IDENTITY_WHEEL = {"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
 
 
 // parameter setting for each model
-int setparam_ENIGMA_I(EnigmaParam*, int, int[3], char[3], char[3], char*);/* param, reflector, wheel_order, ring_setting, wheel_pos, plugboard_pairs */
-int setparam_ENIGMA_M3(EnigmaParam*, int, int[3], char[3], char[3], char*);
-int setparam_ENIGMA_M4(EnigmaParam*, int, int[4], char[4], char[4], char*);
-int setparam_ENIGMA_RAILWAY(EnigmaParam*, int[3], char[4], char[4]); // reflector fixed, add reflector pos/ring setting, no plugboard
-int setparam_ENIGMA_SWISSK(EnigmaParam*, int[3], char[4], char[4]); // reflector fixed, add reflector pos/ring setting, no plugboard
-int setparam_ENIGMA_D_K(EnigmaParam*, int[3], char[4], char[4]); // reflector fixed, add reflector pos/ring setting, no plugboard
-int setparam_ENIGMA_NORWAY(EnigmaParam*, int[3], char[3], char[3], char*); // reflector fixed
-int setparam_ENIGMA_SONDER(EnigmaParam*, int[3], char[3], char[3], char*); // reflector fixed
-int setparam_ENIGMA_T(EnigmaParam*, int[3], char[4], char[4]); // reflector fixed, add reflector pos/ring setting, no plugboard
+/*** param, reflector, wheel_order, ring_setting, wheel_pos, plugboard_pairs ***/
+int setparam_ENIGMA_I(EnigmaParam*, int, int[3], const char[3], const char[3], const char*);
+int setparam_ENIGMA_M3(EnigmaParam*, int, int[3], const char[3], const char[3], const char*);
+int setparam_ENIGMA_M4(EnigmaParam*, int, int[4], const char[4], const char[4], const char*);
+/*** reflector fixed, add reflector pos/ring setting, no plugboard ***/
+int setparam_ENIGMA_RAILWAY(EnigmaParam*, int[3], const char[4], const char[4]);
+/*** reflector fixed, add reflector pos/ring setting, no plugboard ***/
+int setparam_ENIGMA_SWISSK(EnigmaParam*, int[3], const char[4], const char[4]);
+int setparam_ENIGMA_D_K(EnigmaParam*, int[3], const char[4], const char[4]);
+/*** reflector fixed ***/
+int setparam_ENIGMA_NORWAY(EnigmaParam*, int[3], const char[3], const char[3], const char*);
+int setparam_ENIGMA_SONDER(EnigmaParam*, int[3], const char[3], const char[3], const char*);
+/*** reflector fixed, add reflector pos/ring setting, no plugboard ***/
+int setparam_ENIGMA_T(EnigmaParam*, int[3], const char[4], const char[4]);
 
 // simulate Enigma on oneshot (not changing param after encryption)
 int enigmaEncrypt(EnigmaParam*, char*, char*);/* param, from, to */
 int enigmaDecrypt(EnigmaParam*, char*, char*);/* param, from, to */
 
 // simulate Enigma with inplace (rotor setting is changed after encryption)
-int enigmaEncrypt_with_inplace_param(EnigmaParam*, char*, char*);/* param, from, to */
-int enigmaDecrypt_with_inplace_param(EnigmaParam*, char*, char*);/* param, from, to */
+/* param, from, to */
+int enigmaEncrypt_with_inplace_param(EnigmaParam*, char*, char*);
+int enigmaDecrypt_with_inplace_param(EnigmaParam*, char*, char*);
 
 void printEnigmaParam(EnigmaParam*);
-int copyEnigmaParam(EnigmaParam*, EnigmaParam*);/* to, from */
+
+/* to, from */
+int copyEnigmaParam(EnigmaParam*, EnigmaParam*);
 
 
-#endif /* __ENIGMA_H_ */
+#endif  // ENIGMA_H_
